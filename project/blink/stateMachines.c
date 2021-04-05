@@ -11,10 +11,54 @@ void state_advance()		/* alternate between toggling red & green */
   
   switch (state) {
     
-  case 0: red_on = 0; green_on = 0; state++; break; /*has both colors off*/
+  case 0: red_on = 0; green_on = 0; state++; break; /*turns both light off*/
   case 1: red_on = 1; green_on = 0; state++; break; /*turns the red light on*/
-  case 2: red_on = 0; green_on = 1; state++; break; /*turns the green light on*/
-  case 3: red_on = 1; green_on = 1; state = 0; break; /*turns both of the colors on*/
+  case 2: red_on = 1; green_on = 0; state++; break; /*turns the red light on*/
+  case 3: red_on = 0; green_on = 1; state++; break; /*turns the green light on*/
+  case 4: red_on = 0; green_on = 1; state++; break; /*turns the green light on*/
+  case 5: red_on = 1; green_on = 1; state = 0; break; /*turns both of the colors on*/
+  default: state = 0;
+  }
+
+  led_changed = 1;
+  led_update();
+}
+
+void state_advance_2()		/* alternate between toggling red & green */
+{
+  char changed = 0;
+  static char state = 0;
+  
+  switch (state) {
+  case 0: red_on = 1; green_on = 0; state++; break; /*turns the red light on*/
+  default: state = 0;
+  }
+
+  led_changed = 1;
+  led_update();
+}
+
+void state_advance_3()		/* alternate between toggling red & green */
+{
+  char changed = 0;
+  static char state = 0;
+  
+  switch (state) {
+  case 0: red_on = 0; green_on = 1; state++; break; /*turns the green light on*/
+  default: state = 0;
+  }
+
+  led_changed = 1;
+  led_update();
+}
+
+void state_advance_4()		/* alternate between toggling red & green */
+{
+  char changed = 0;
+  static char state = 0;
+  
+  switch (state) {
+  case 0: red_on = 0; green_on = 0; state++; break; /*turns both light off*/
   default: state = 0;
   }
 
@@ -25,15 +69,19 @@ void state_advance()		/* alternate between toggling red & green */
 void buzzer_state_advance(){
   if(switch_state_down){
     buzzer_state_1_advance();
+    state_advance_2();
   }
   else if(switch_state_down_2){
     buzzer_state_2_advance();
+    state_advance();
   }
   else if(switch_state_down_3){
     buzzer_state_3_advance();
+    state_advance_3();
   }
   else if(switch_state_down_4){
     buzzer_state_4_advance();
+    state_advance_4();
   }else{
     buzzer_set_period(0);
   }
